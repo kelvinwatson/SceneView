@@ -2,13 +2,13 @@ package com.nouman.sceneview
 
 import android.content.DialogInterface
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.google.ar.core.exceptions.CameraNotAvailableException
 import com.google.ar.sceneform.HitTestResult
 import com.google.ar.sceneform.assets.RenderableSource
@@ -18,7 +18,6 @@ import com.google.ar.sceneform.ux.TransformationSystem
 import com.nouman.sceneview.SceneViewActivity.Statics.EXTRA_MODEL_TYPE
 import com.nouman.sceneview.nodes.DragTransformableNode
 import kotlinx.android.synthetic.main.activity_scene_view.*
-import java.lang.Exception
 import java.util.concurrent.CompletionException
 
 class SceneViewActivity : AppCompatActivity() {
@@ -26,7 +25,7 @@ class SceneViewActivity : AppCompatActivity() {
     var remoteModelUrl =
         "https://poly.googleusercontent.com/downloads/0BnDT3T1wTE/85QOHCZOvov/Mesh_Beagle.gltf"
 
-    var localModel = "model.sfb"
+    var localModel = "dragon.glb"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scene_view)
@@ -90,7 +89,12 @@ class SceneViewActivity : AppCompatActivity() {
 
         skuProgressBar.setVisibility(View.VISIBLE)
         ModelRenderable.builder()
-            .setSource(this, Uri.parse(localModel))
+            .setSource(
+                this,
+                RenderableSource.builder()
+                    .setSource(this, Uri.parse(localModel), RenderableSource.SourceType.GLB)
+                    .setScale(0.25f).setRecenterMode(RenderableSource.RecenterMode.ROOT).build()
+            )
             .setRegistryId(localModel)
             .build()
             .thenAccept { modelRenderable: ModelRenderable ->
